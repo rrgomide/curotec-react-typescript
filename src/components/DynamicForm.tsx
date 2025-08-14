@@ -3,10 +3,9 @@ import React, {
   useContext,
   useReducer,
   useCallback,
+  type ReactNode,
 } from 'react'
-import type { ReactNode } from 'react'
 
-// Types
 interface FormField {
   name: string
   value: string | boolean
@@ -31,7 +30,6 @@ interface FormContextType {
   resetForm: () => void
 }
 
-// Form Actions
 type FormAction =
   | {
       type: 'SET_FIELD_VALUE'
@@ -60,6 +58,7 @@ const formReducer = (state: FormState, action: FormAction): FormState => {
           },
         },
       }
+
     case 'SET_FIELD_ERROR':
       return {
         ...state,
@@ -71,6 +70,7 @@ const formReducer = (state: FormState, action: FormAction): FormState => {
           },
         },
       }
+
     case 'SET_FIELD_TOUCHED':
       return {
         ...state,
@@ -82,12 +82,16 @@ const formReducer = (state: FormState, action: FormAction): FormState => {
           },
         },
       }
+
     case 'SET_SUBMITTING':
       return { ...state, isSubmitting: action.payload }
+
     case 'SET_SUBMITTED':
       return { ...state, isSubmitted: action.payload }
+
     case 'SET_SUBMIT_ERROR':
       return { ...state, submitError: action.payload }
+
     case 'RESET_FORM':
       return {
         fields: {},
@@ -95,15 +99,14 @@ const formReducer = (state: FormState, action: FormAction): FormState => {
         isSubmitted: false,
         submitError: undefined,
       }
+
     default:
       return state
   }
 }
 
-// Form Context
 const FormContext = createContext<FormContextType | undefined>(undefined)
 
-// Custom Hook for Form Context
 export const useFormContext = () => {
   const context = useContext(FormContext)
   if (!context) {
@@ -157,7 +160,6 @@ export const useFormField = (
   }
 }
 
-// Validation Functions
 export const validators = {
   required: (value: string | boolean): string | undefined => {
     if (typeof value === 'string' && !value.trim()) {
@@ -186,7 +188,6 @@ export const validators = {
     },
 }
 
-// Form Provider Component
 interface FormProviderProps {
   children: ReactNode
   onSubmit: (values: Record<string, string | boolean>) => Promise<void>
@@ -298,7 +299,6 @@ export const FormProvider: React.FC<FormProviderProps> = ({
   )
 }
 
-// Reusable Form Components
 interface BaseFieldProps {
   name: string
   label: string
@@ -387,11 +387,12 @@ export const SelectField: React.FC<SelectFieldProps> = ({
         value={field.value as string}
         onChange={handleSelectChange}
         onBlur={handleBlur}
-        className={`w-full px-3 py-3 text-sm border rounded-md transition-colors duration-200 ease-in-out bg-white focus:outline-none focus:ring-3 focus:ring-blue-500/10 ${
-          field.error && field.touched
-            ? 'border-red-500 focus:border-red-500 focus:ring-red-500/10'
-            : 'border-gray-300 focus:border-blue-500'
-        }`}
+        className={`w-full px-3 py-3 text-sm border rounded-md transition-colors duration-200 ease-in-out bg-white focus:outline-none focus:ring-3
+           focus:ring-blue-500/10 ${
+             field.error && field.touched
+               ? 'border-red-500 focus:border-red-500 focus:ring-red-500/10'
+               : 'border-gray-300 focus:border-blue-500'
+           }`}
       >
         <option value="">Select an option</option>
         {options.map(option => (
@@ -419,8 +420,8 @@ export const CheckboxField: React.FC<BaseFieldProps> = ({
   }
 
   return (
-    <div className="mb-6 flex items-start">
-      <label className="flex items-start cursor-pointer text-sm text-gray-700">
+    <div className="flex flex-row items-center">
+      <label className="flex flex-row items-center cursor-pointer text-sm text-gray-700">
         <input
           type="checkbox"
           checked={field.value as boolean}
