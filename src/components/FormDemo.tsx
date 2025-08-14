@@ -4,8 +4,8 @@ import {
   TextField,
   SelectField,
   CheckboxField,
-  validators,
 } from './DynamicForm'
+import { validators } from './DynamicForm/validators'
 
 const FormDemo: React.FC = () => {
   const handleSubmit = async (values: Record<string, string | boolean>) => {
