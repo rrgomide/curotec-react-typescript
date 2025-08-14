@@ -1,5 +1,6 @@
 import { useState, type JSXElementConstructor } from 'react'
 import { cn } from './utils/cn'
+import FormDemo from './components/FormDemo'
 
 function HamburgerIcon({ isOpen }: { isOpen: boolean }) {
   return (
@@ -133,23 +134,25 @@ const availableComponents = [
 
 type AvailableComponents = (typeof availableComponents)[number]
 
-const DynamicFormComponent = () => {
+function ComponentContainer({ children }: { children: React.ReactNode }) {
   return (
-    <div className="mt-8 p-6 bg-white dark:bg-gray-800 rounded-lg shadow-md border border-gray-200 dark:border-gray-700">
-      <h2 className="text-xl font-semibold text-gray-800 dark:text-white mb-4">
-        Dynamic Form Component
-      </h2>
-      <p className="text-gray-600 dark:text-gray-300">
-        This component will be implemented with dynamic form generation
-        capabilities.
-      </p>
+    <div className="p-6 bg-white dark:bg-gray-800 rounded-lg shadow-md border border-gray-200 dark:border-gray-700">
+      {children}
     </div>
   )
 }
 
-const OptimizedDataGrid = () => {
+function DynamicFormComponent() {
   return (
-    <div className="mt-8 p-6 bg-white dark:bg-gray-800 rounded-lg shadow-md border border-gray-200 dark:border-gray-700">
+    <ComponentContainer>
+      <FormDemo />
+    </ComponentContainer>
+  )
+}
+
+function OptimizedDataGrid() {
+  return (
+    <ComponentContainer>
       <h2 className="text-xl font-semibold text-gray-800 dark:text-white mb-4">
         Optimized Data Grid
       </h2>
@@ -157,7 +160,7 @@ const OptimizedDataGrid = () => {
         This component will feature an optimized data grid with sorting,
         filtering, and pagination.
       </p>
-    </div>
+    </ComponentContainer>
   )
 }
 
