@@ -1,5 +1,6 @@
 import { create } from 'zustand'
 import { devtools } from 'zustand/middleware'
+import { faker } from '@faker-js/faker'
 
 export interface DataItem extends Record<string, unknown> {
   id: number
@@ -57,19 +58,28 @@ const generateMockData = (count: number): DataItem[] => {
   ]
   const statuses: DataItem['status'][] = ['active', 'inactive', 'pending']
 
-  return Array.from({ length: count }, (_, index) => ({
-    id: index + 1,
-    name: `Employee ${index + 1}`,
-    email: `employee${index + 1}@company.com`,
-    department: departments[Math.floor(Math.random() * departments.length)],
-    salary: Math.floor(Math.random() * 100_000) + 30_000,
-    startDate: new Date(
-      Date.now() - Math.random() * 1_000 * 60 * 60 * 24 * 365 * 5
-    )
-      .toISOString()
-      .split('T')[0],
-    status: statuses[Math.floor(Math.random() * statuses.length)],
-  }))
+  return Array.from({ length: count }, (_, index) => {
+    const firstName = faker.person.firstName()
+    const lastName = faker.person.lastName()
+    const fullName = `${firstName} ${lastName}`
+    const email = faker.internet
+      .email({ firstName, lastName, provider: 'company.com' })
+      .toLocaleLowerCase()
+
+    return {
+      id: index + 1,
+      name: fullName,
+      email: email,
+      department: departments[Math.floor(Math.random() * departments.length)],
+      salary: Math.floor(Math.random() * 100_000) + 30_000,
+      startDate: new Date(
+        Date.now() - Math.random() * 1_000 * 60 * 60 * 24 * 365 * 5
+      )
+        .toISOString()
+        .split('T')[0],
+      status: statuses[Math.floor(Math.random() * statuses.length)],
+    }
+  })
 }
 
 export const useDataGridStore = create<DataGridState>()(
