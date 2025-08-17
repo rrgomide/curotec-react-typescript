@@ -1,29 +1,34 @@
 import { Component, type ErrorInfo, type ReactNode } from 'react'
 
-interface Props {
+interface Props<TError extends Error = Error> {
   children: ReactNode
-  fallback?: ReactNode
-  onError?: (error: Error, errorInfo: ErrorInfo) => void
+  fallback?: ReactNode | ((error: TError, errorInfo: ErrorInfo) => ReactNode)
+  onError?: (error: TError, errorInfo: ErrorInfo) => void
 }
 
-interface State {
+interface State<TError extends Error = Error> {
   hasError: boolean
-  error?: Error
+  error?: TError
   errorInfo?: ErrorInfo
 }
 
-class ErrorBoundary extends Component<Props, State> {
-  constructor(props: Props) {
+class ErrorBoundary<TError extends Error = Error> extends Component<
+  Props<TError>,
+  State<TError>
+> {
+  constructor(props: Props<TError>) {
     super(props)
     this.state = { hasError: false }
   }
 
-  static getDerivedStateFromError(error: Error): State {
+  static getDerivedStateFromError<TError extends Error = Error>(
+    error: TError
+  ): State<TError> {
     // Update state so the next render will show the fallback UI
     return { hasError: true, error }
   }
 
-  componentDidCatch(error: Error, errorInfo: ErrorInfo) {
+  componentDidCatch(error: TError, errorInfo: ErrorInfo) {
     // Log the error to console in development
     if (import.meta.env.DEV) {
       console.error('ErrorBoundary caught an error:', error, errorInfo)
@@ -40,7 +45,16 @@ class ErrorBoundary extends Component<Props, State> {
     if (this.state.hasError) {
       // Custom fallback UI
       if (this.props.fallback) {
-        return this.props.fallback
+        if (
+          typeof this.props.fallback === 'function' &&
+          this.state.error &&
+          this.state.errorInfo
+        ) {
+          return this.props.fallback(this.state.error, this.state.errorInfo)
+        }
+        if (typeof this.props.fallback === 'object') {
+          return this.props.fallback
+        }
       }
 
       // Default fallback UI

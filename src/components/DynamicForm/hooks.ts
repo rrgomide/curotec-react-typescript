@@ -17,9 +17,9 @@ export const useFormContext = () => {
   return context
 }
 
-export const useFormField = (
+export const useFormField = <T = string | boolean>(
   name: string,
-  initialValue: string | boolean = ''
+  initialValue: T = '' as T
 ) => {
   const {
     state,
@@ -36,21 +36,21 @@ export const useFormField = (
   }
 
   const handleChange = useCallback(
-    (value: string | boolean) => {
-      setFieldValue(name, value)
-      const error = validateField(name, value)
+    (value: T) => {
+      setFieldValue(name as any, value as any)
+      const error = validateField(name as any, value as any)
       if (error) {
-        setFieldError(name, error)
+        setFieldError(name as any, error)
       }
     },
     [name, setFieldValue, setFieldError, validateField]
   )
 
   const handleBlur = useCallback(() => {
-    setFieldTouched(name)
-    const error = validateField(name, field.value)
+    setFieldTouched(name as any)
+    const error = validateField(name as any, field.value as any)
     if (error) {
-      setFieldError(name, error)
+      setFieldError(name as any, error)
     }
   }, [name, field.value, setFieldTouched, setFieldError, validateField])
 
@@ -59,4 +59,38 @@ export const useFormField = (
     handleChange,
     handleBlur,
   }
+}
+
+// Generic hook for creating type-safe form validators
+export function useFormValidator<T extends Record<string, unknown>>() {
+  return useCallback(
+    <K extends keyof T>(
+      schema: Record<K, (value: T[K]) => string | undefined>
+    ) => {
+      return schema
+    },
+    []
+  )
+}
+
+// Generic hook for creating type-safe form state
+export function useFormState<T extends Record<string, unknown>>(
+  initialValues: Partial<T> = {}
+) {
+  return useCallback(() => {
+    return Object.keys(initialValues).reduce(
+      (acc, key) => ({
+        ...acc,
+        [key]: {
+          name: key,
+          value: initialValues[key as keyof T],
+          touched: false,
+        },
+      }),
+      {} as Record<
+        keyof T,
+        { name: string; value: T[keyof T]; touched: boolean }
+      >
+    )
+  }, [initialValues])
 }

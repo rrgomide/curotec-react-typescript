@@ -1,7 +1,7 @@
 import { create } from 'zustand'
 import { devtools } from 'zustand/middleware'
 
-export interface DataItem {
+export interface DataItem extends Record<string, unknown> {
   id: number
   name: string
   email: string
@@ -11,8 +11,8 @@ export interface DataItem {
   status: 'active' | 'inactive' | 'pending'
 }
 
-export interface SortConfig {
-  key: keyof DataItem
+export interface SortConfig<T = DataItem> {
+  key: keyof T
   direction: 'asc' | 'desc'
 }
 
@@ -34,7 +34,6 @@ export interface DataGridState {
   totalPages: number
 
   sortConfig: SortConfig | null
-
   filterConfig: FilterConfig
 
   setItems: (items: DataItem[]) => void

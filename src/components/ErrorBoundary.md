@@ -47,7 +47,6 @@ A demo component that shows how the ErrorBoundary works by intentionally throwin
 
 ```tsx
 import ErrorDemo from './components/ErrorDemo'
-
 ;<ErrorDemo title="Custom Title" />
 ```
 
@@ -59,7 +58,6 @@ A demo component that shows how to handle async errors using the useErrorHandler
 
 ```tsx
 import AsyncErrorDemo from './components/AsyncErrorDemo'
-
 ;<AsyncErrorDemo />
 ```
 
@@ -85,7 +83,7 @@ function MyComponent() {
   const { handleError, wrapAsync } = useErrorHandler({
     onError: (error) => {
       // Custom error handling
-      console.log('Error occurred:', error.message)
+      console.error('Error occurred:', error.message)
     }
   })
 
