@@ -1,7 +1,6 @@
 import { useContext, useCallback } from 'react'
 import { type FormContextType } from './types'
 
-// This will be imported from the main component file
 let FormContext: React.Context<FormContextType | undefined>
 
 export const setFormContext = (

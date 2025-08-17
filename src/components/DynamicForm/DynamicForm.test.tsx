@@ -4,7 +4,6 @@ import userEvent from '@testing-library/user-event'
 import { DynamicForm } from './index'
 import { TextField, SelectField, CheckboxField } from '../shared'
 
-// Mock console.log to avoid noise in tests
 const consoleSpy = vi.spyOn(console, 'log').mockImplementation(() => {})
 
 describe('DynamicForm', () => {
@@ -144,24 +143,19 @@ describe('DynamicForm', () => {
     ) as HTMLInputElement
     const resetButton = screen.getByRole('button', { name: /reset/i })
 
-    // Verify initial values
     expect(nameInput.value).toBe('John Doe')
     expect(emailInput.value).toBe('john@example.com')
 
-    // Change values
     await user.clear(nameInput)
     await user.type(nameInput, 'Jane Doe')
     await user.clear(emailInput)
     await user.type(emailInput, 'jane@example.com')
 
-    // Verify changes
     expect(nameInput.value).toBe('Jane Doe')
     expect(emailInput.value).toBe('jane@example.com')
 
-    // Reset form
     await user.click(resetButton)
 
-    // Verify reset
     expect(nameInput.value).toBe('')
     expect(emailInput.value).toBe('')
   })
@@ -303,7 +297,6 @@ describe('DynamicForm', () => {
 
     const nameInput = screen.getByLabelText('Name')
 
-    // Type and then clear to trigger validation
     await user.type(nameInput, 'John')
     await user.clear(nameInput)
     await user.tab() // Trigger blur event

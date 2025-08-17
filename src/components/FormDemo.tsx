@@ -79,7 +79,7 @@ function FormDemo() {
     values: Record<string, string | boolean>
   ) {
     await simulateDelay({ milliseconds: 1_500 })
-    console.log('Form submitted with values:', JSON.stringify(values, null, 2))
+    console.info('Form submitted with values:', JSON.stringify(values, null, 2))
 
     // ~50% chance of error/success
     if (Math.random() > 0.5) {

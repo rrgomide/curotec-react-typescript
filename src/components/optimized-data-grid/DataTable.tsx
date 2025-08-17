@@ -151,7 +151,6 @@ export const DataTable: React.FC = React.memo(() => {
       startPage = Math.max(1, endPage - maxVisiblePages + 1)
     }
 
-    // Previous button
     pages.push(
       <button
         key="prev"
@@ -163,7 +162,6 @@ export const DataTable: React.FC = React.memo(() => {
       </button>
     )
 
-    // Page numbers
     for (let i = startPage; i <= endPage; i++) {
       pages.push(
         <button
@@ -180,7 +178,6 @@ export const DataTable: React.FC = React.memo(() => {
       )
     }
 
-    // Next button
     pages.push(
       <button
         key="next"

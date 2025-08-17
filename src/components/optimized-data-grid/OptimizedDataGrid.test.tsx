@@ -3,12 +3,10 @@ import { render, screen } from '@testing-library/react'
 import { OptimizedDataGrid } from './index'
 import { initializeDataGrid } from './store'
 
-// Mock the store initialization
 vi.mock('./store', () => ({
   initializeDataGrid: vi.fn(),
 }))
 
-// Mock child components to isolate OptimizedDataGrid testing
 vi.mock('./FilterPanel', () => ({
   FilterPanel: () => <div data-testid="filter-panel">Filter Panel</div>,
 }))
@@ -67,14 +65,12 @@ describe('OptimizedDataGrid', () => {
   it('renders with correct layout structure', () => {
     render(<OptimizedDataGrid />)
 
-    // Check for the outer wrapper with correct classes
     const outerWrapper = screen
       .getByText('Optimized Data Grid')
       .closest('.min-h-screen')
     expect(outerWrapper).toBeInTheDocument()
     expect(outerWrapper).toHaveClass('bg-gray-50', 'py-8')
 
-    // Check for the inner wrapper with correct classes
     const innerWrapper = screen.getByTestId('stats-panel').closest('.space-y-6')
     expect(innerWrapper).toBeInTheDocument()
   })
@@ -136,10 +132,8 @@ describe('OptimizedDataGrid', () => {
 
     expect(mockInitializeDataGrid).toHaveBeenCalledTimes(1)
 
-    // Re-render the component
     rerender(<OptimizedDataGrid />)
 
-    // Should still only be called once due to useEffect with empty dependency array
     expect(mockInitializeDataGrid).toHaveBeenCalledTimes(1)
   })
 

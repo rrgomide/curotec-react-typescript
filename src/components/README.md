@@ -53,7 +53,7 @@ import {
 const MyForm = () => {
   const handleSubmit = async (values: Record<string, string | boolean>) => {
     // Handle form submission
-    console.log('Form values:', values)
+    console.info('Form values:', values)
   }
 
   const validationSchema = {

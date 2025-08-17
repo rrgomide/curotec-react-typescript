@@ -14,7 +14,6 @@ function resetAllFields(fields: Record<string, FormField>) {
   }, {})
 }
 
-// Form Reducer
 export const formReducer = (
   state: FormState,
   action: FormAction

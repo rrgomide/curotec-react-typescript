@@ -25,23 +25,18 @@ export interface FilterConfig {
 }
 
 export interface DataGridState {
-  // Data
   items: DataItem[]
   filteredItems: DataItem[]
   isLoading: boolean
 
-  // Pagination
   currentPage: number
   itemsPerPage: number
   totalPages: number
 
-  // Sorting
   sortConfig: SortConfig | null
 
-  // Filtering
   filterConfig: FilterConfig
 
-  // Actions
   setItems: (items: DataItem[]) => void
   setLoading: (loading: boolean) => void
   setCurrentPage: (page: number) => void
@@ -81,7 +76,6 @@ const generateMockData = (count: number): DataItem[] => {
 export const useDataGridStore = create<DataGridState>()(
   devtools(
     (set, get) => ({
-      // Initial state
       items: [],
       filteredItems: [],
       isLoading: false,
@@ -97,7 +91,6 @@ export const useDataGridStore = create<DataGridState>()(
         maxSalary: 200000,
       },
 
-      // Actions
       setItems: items => {
         set({ items, totalPages: Math.ceil(items.length / get().itemsPerPage) })
         get().applyFiltersAndSort()
@@ -134,7 +127,6 @@ export const useDataGridStore = create<DataGridState>()(
 
         let filtered = [...items]
 
-        // Apply filters
         if (filterConfig.search) {
           const searchLower = filterConfig.search.toLowerCase()
           filtered = filtered.filter(
@@ -169,7 +161,6 @@ export const useDataGridStore = create<DataGridState>()(
           )
         }
 
-        // Apply sorting
         if (sortConfig) {
           filtered.sort((a, b) => {
             const aValue = a[sortConfig.key]
@@ -217,12 +208,10 @@ export const useDataGridStore = create<DataGridState>()(
   )
 )
 
-// Initialize with mock data
 export const initializeDataGrid = () => {
   const store = useDataGridStore.getState()
   store.setLoading(true)
 
-  // Simulate API call
   setTimeout(() => {
     const mockData = generateMockData(100)
     store.setItems(mockData)
