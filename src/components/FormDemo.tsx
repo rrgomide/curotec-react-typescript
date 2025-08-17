@@ -81,7 +81,6 @@ export default function FormDemo() {
     await simulateDelay({ milliseconds: 1_500 })
     console.info('Form submitted with values:', JSON.stringify(values, null, 2))
 
-    // ~50% chance of error/success
     if (Math.random() > 0.5) {
       throw new Error('Could not submit form. Please try again.')
     }

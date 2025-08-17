@@ -299,7 +299,7 @@ describe('DynamicForm', () => {
 
     await user.type(nameInput, 'John')
     await user.clear(nameInput)
-    await user.tab() // Trigger blur event
+    await user.tab()
 
     await waitFor(() => {
       expect(screen.getByText('Name is required')).toBeInTheDocument()

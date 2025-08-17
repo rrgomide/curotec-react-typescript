@@ -58,7 +58,6 @@ export const useFormField = (name: string, initialValue: string | boolean) => {
   }
 }
 
-// Generic hook for creating type-safe form validators
 export function useFormValidator<T extends Record<string, unknown>>() {
   return useCallback(
     <K extends keyof T>(
@@ -70,7 +69,6 @@ export function useFormValidator<T extends Record<string, unknown>>() {
   )
 }
 
-// Generic hook for creating type-safe form state
 export function useFormState<T extends Record<string, unknown>>(
   initialValues: Partial<T> = {}
 ) {

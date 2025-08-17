@@ -11,7 +11,6 @@ export default function AsyncErrorDemo() {
     },
   })
 
-  // Example async function that might fail
   const fetchData = async (shouldFail: boolean) => {
     await new Promise(resolve => setTimeout(resolve, 1000))
 
@@ -22,7 +21,6 @@ export default function AsyncErrorDemo() {
     return 'Data fetched successfully!'
   }
 
-  // Wrapped version that handles errors automatically
   const safeFetchData = wrapAsync(fetchData)
 
   const handleSuccess = async () => {
