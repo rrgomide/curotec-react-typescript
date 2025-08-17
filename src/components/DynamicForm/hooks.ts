@@ -17,10 +17,7 @@ export const useFormContext = () => {
   return context
 }
 
-export const useFormField = <T = string | boolean>(
-  name: string,
-  initialValue: T = '' as T
-) => {
+export const useFormField = (name: string, initialValue: string | boolean) => {
   const {
     state,
     setFieldValue,
@@ -36,21 +33,21 @@ export const useFormField = <T = string | boolean>(
   }
 
   const handleChange = useCallback(
-    (value: T) => {
-      setFieldValue(name as any, value as any)
-      const error = validateField(name as any, value as any)
+    (value: string) => {
+      setFieldValue(name, value)
+      const error = validateField(name, value)
       if (error) {
-        setFieldError(name as any, error)
+        setFieldError(name, error)
       }
     },
     [name, setFieldValue, setFieldError, validateField]
   )
 
   const handleBlur = useCallback(() => {
-    setFieldTouched(name as any)
-    const error = validateField(name as any, field.value as any)
+    setFieldTouched(name)
+    const error = validateField(name, field.value)
     if (error) {
-      setFieldError(name as any, error)
+      setFieldError(name, error)
     }
   }, [name, field.value, setFieldTouched, setFieldError, validateField])
 

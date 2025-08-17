@@ -43,14 +43,14 @@ export interface FormProviderProps<T = Record<string, string | boolean>> {
   validationSchema?: Record<keyof T, (value: T[keyof T]) => string | undefined>
 }
 
-export interface BaseFieldProps<T = string> {
+export interface BaseFieldProps {
   name: string
   label: string
   placeholder?: string
   required?: boolean
 }
 
-export interface SelectFieldProps<T = string> extends BaseFieldProps<T> {
+export interface SelectFieldProps extends BaseFieldProps {
   options: Array<{ value: string; label: string }>
 }
 

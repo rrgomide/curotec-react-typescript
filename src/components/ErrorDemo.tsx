@@ -8,7 +8,7 @@ export default function ErrorDemo({
   title = 'Error Demo Component',
 }: ErrorDemoProps) {
   const [shouldThrow, setShouldThrow] = useState(false)
-  const [shouldThrowAsync, setShouldThrowAsync] = useState(false)
+  const [, setShouldThrowAsync] = useState(false)
 
   if (shouldThrow) {
     throw new Error('This is a simulated error thrown by the component!')
@@ -16,7 +16,6 @@ export default function ErrorDemo({
 
   const handleAsyncError = async () => {
     setShouldThrowAsync(true)
-    // Simulate an async error
     await new Promise(resolve => setTimeout(resolve, 100))
     throw new Error('This is a simulated async error!')
   }

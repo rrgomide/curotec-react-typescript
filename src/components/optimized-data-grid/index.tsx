@@ -3,7 +3,7 @@ import { FilterPanel } from './FilterPanel'
 import { StatsPanel } from './StatsPanel'
 import { PaginationControls } from './PaginationControls'
 import { DataTable } from './DataTable'
-import { initializeDataGrid, useDataGridStore } from './store'
+import { initializeDataGrid } from './store'
 
 function Header({
   title,

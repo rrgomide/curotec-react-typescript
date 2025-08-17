@@ -15,13 +15,9 @@ export function useErrorHandler<TError extends Error = Error>(
         console.error('Error caught by useErrorHandler:', error, errorInfo)
       }
 
-      // Call the onError callback if provided
       options.onError?.(error, errorInfo)
-
-      // You could also send to an error reporting service here
-      // Example: Sentry.captureException(error)
     },
-    [options.onError]
+    [options]
   )
 
   const wrapAsync = useCallback(
