@@ -85,7 +85,7 @@ export const FilterPanel: React.FC = React.memo(() => {
           <button
             onClick={handleReset}
             onKeyDown={handleKeyDown}
-            className="text-sm text-blue-600 hover:text-blue-800 font-medium focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 rounded"
+            className="text-sm text-blue-600 hover:text-blue-800 font-medium focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 rounded bg-transparent border border-blue-500"
             aria-label="Clear all filters"
           >
             Clear All

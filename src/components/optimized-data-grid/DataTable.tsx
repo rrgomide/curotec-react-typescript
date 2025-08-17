@@ -182,7 +182,7 @@ export const DataTable: React.FC = React.memo(() => {
     const pages = []
     const maxVisiblePages = 5
     let startPage = Math.max(1, currentPage - Math.floor(maxVisiblePages / 2))
-    let endPage = Math.min(totalPages, startPage + maxVisiblePages - 1)
+    const endPage = Math.min(totalPages, startPage + maxVisiblePages - 1)
 
     if (endPage - startPage + 1 < maxVisiblePages) {
       startPage = Math.max(1, endPage - maxVisiblePages + 1)
@@ -348,7 +348,7 @@ export const DataTable: React.FC = React.memo(() => {
             </div>
             <div>
               <nav
-                className="relative z-0 inline-flex rounded-md shadow-sm -space-x-px"
+                className="relative z-0 inline-flex rounded-md shadow-sm space-x-1"
                 role="navigation"
                 aria-label="Pagination"
               >

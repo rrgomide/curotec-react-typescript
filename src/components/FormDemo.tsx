@@ -74,7 +74,7 @@ function simulateDelay({ milliseconds }: { milliseconds: number }) {
   return new Promise(resolve => setTimeout(resolve, milliseconds))
 }
 
-function FormDemo() {
+export default function FormDemo() {
   async function handleFormDemoSubmit(
     values: Record<string, string | boolean>
   ) {
@@ -142,70 +142,7 @@ function FormDemo() {
             />
           </DynamicForm>
         </div>
-
-        <div className="bg-white/95 backdrop-blur-sm rounded-xl p-8 mb-8 shadow-2xl">
-          <h3 className="text-xl font-semibold text-gray-800 mb-4">
-            Features Demonstrated
-          </h3>
-          <ul className="space-y-2">
-            <li className="py-2 text-gray-600 border-b border-gray-200 last:border-b-0">
-              <strong className="text-gray-800">Component Composition:</strong>{' '}
-              Reusable form components
-            </li>
-            <li className="py-2 text-gray-600 border-b border-gray-200 last:border-b-0">
-              <strong className="text-gray-800">React Context:</strong>{' '}
-              Centralized state management
-            </li>
-            <li className="py-2 text-gray-600 border-b border-gray-200 last:border-b-0">
-              <strong className="text-gray-800">Custom Hooks:</strong> Shared
-              form logic
-            </li>
-            <li className="py-2 text-gray-600 border-b border-gray-200 last:border-b-0">
-              <strong className="text-gray-800">Validation:</strong> Real-time
-              field validation
-            </li>
-            <li className="py-2 text-gray-600 border-b border-gray-200 last:border-b-0">
-              <strong className="text-gray-800">TypeScript:</strong> Full type
-              safety
-            </li>
-            <li className="py-2 text-gray-600 border-b border-gray-200 last:border-b-0">
-              <strong className="text-gray-800">Error Handling:</strong> Form
-              submission error states
-            </li>
-            <li className="py-2 text-gray-600 border-b border-gray-200 last:border-b-0">
-              <strong className="text-gray-800">Accessibility:</strong> Proper
-              labels and ARIA attributes
-            </li>
-          </ul>
-        </div>
-
-        <div className="bg-white/95 backdrop-blur-sm rounded-xl p-8 shadow-2xl">
-          <h3 className="text-xl font-semibold text-gray-800 mb-4">
-            Usage Example
-          </h3>
-          <pre className="bg-gray-800 rounded-lg p-6 overflow-x-auto">
-            <code className="text-gray-200 font-mono text-sm leading-relaxed">
-              {`import { DynamicForm, TextField, SelectField, CheckboxField } from './DynamicForm';
-
-const MyForm = () => {
-  const handleSubmit = async (values) => {
-    console.log('Form values:', values);
-  };
-
-  return (
-    <DynamicForm onSubmit={handleSubmit}>
-      <TextField name="name" label="Name" required />
-      <SelectField name="category" label="Category" options={options} />
-      <CheckboxField name="agree" label="I agree" required />
-    </DynamicForm>
-  );
-};`}
-            </code>
-          </pre>
-        </div>
       </div>
     </div>
   )
 }
-
-export default FormDemo
