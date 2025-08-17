@@ -15,18 +15,43 @@ const TableHeader: React.FC<TableHeaderProps> = React.memo(
       onSort(sortKey)
     }, [onSort, sortKey])
 
+    const handleKeyDown = useCallback(
+      (e: React.KeyboardEvent) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault()
+          onSort(sortKey)
+        }
+      },
+      [onSort, sortKey]
+    )
+
     const isSorted = currentSort?.key === sortKey
     const sortDirection = isSorted ? currentSort.direction : null
 
     return (
       <th
-        className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-50"
+        className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-inset"
         onClick={handleClick}
+        onKeyDown={handleKeyDown}
+        tabIndex={0}
+        role="columnheader"
+        aria-sort={
+          isSorted
+            ? sortDirection === 'asc'
+              ? 'ascending'
+              : 'descending'
+            : 'none'
+        }
+        aria-label={`${label} column, ${
+          isSorted
+            ? `${sortDirection === 'asc' ? 'ascending' : 'descending'} sort`
+            : 'click to sort'
+        }`}
       >
         <div className="flex items-center space-x-1">
           <span>{label}</span>
           {isSorted && (
-            <span className="text-gray-400">
+            <span className="text-gray-400" aria-hidden="true">
               {sortDirection === 'asc' ? '↑' : '↓'}
             </span>
           )}
@@ -95,6 +120,8 @@ const TableRow: React.FC<TableRowProps> = React.memo(({ item }) => {
           className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${getStatusColor(
             item.status
           )}`}
+          role="status"
+          aria-label={`Status: ${item.status}`}
         >
           {item.status.charAt(0).toUpperCase() + item.status.slice(1)}
         </span>
@@ -141,6 +168,16 @@ export const DataTable: React.FC = React.memo(() => {
     [setCurrentPage]
   )
 
+  const handleKeyDown = useCallback(
+    (e: React.KeyboardEvent, page: number) => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault()
+        handlePageChange(page)
+      }
+    },
+    [handlePageChange]
+  )
+
   const renderPagination = () => {
     const pages = []
     const maxVisiblePages = 5
@@ -155,8 +192,10 @@ export const DataTable: React.FC = React.memo(() => {
       <button
         key="prev"
         onClick={() => handlePageChange(currentPage - 1)}
+        onKeyDown={e => handleKeyDown(e, currentPage - 1)}
         disabled={currentPage === 1}
-        className="px-3 py-2 text-sm font-medium text-gray-500 bg-white border border-gray-300 rounded-l-md hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+        className="px-3 py-2 text-sm font-medium text-gray-500 bg-white border border-gray-300 rounded-l-md hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-inset"
+        aria-label="Go to previous page"
       >
         Previous
       </button>
@@ -167,11 +206,14 @@ export const DataTable: React.FC = React.memo(() => {
         <button
           key={i}
           onClick={() => handlePageChange(i)}
-          className={`px-3 py-2 text-sm font-medium border-t border-b ${
+          onKeyDown={e => handleKeyDown(e, i)}
+          className={`px-3 py-2 text-sm font-medium border-t border-b focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-inset ${
             i === currentPage
               ? 'bg-blue-50 border-blue-500 text-blue-600'
               : 'bg-white border-gray-300 text-gray-500 hover:bg-gray-50'
           }`}
+          aria-label={`Go to page ${i}`}
+          aria-current={i === currentPage ? 'page' : undefined}
         >
           {i}
         </button>
@@ -182,8 +224,10 @@ export const DataTable: React.FC = React.memo(() => {
       <button
         key="next"
         onClick={() => handlePageChange(currentPage + 1)}
+        onKeyDown={e => handleKeyDown(e, currentPage + 1)}
         disabled={currentPage === totalPages}
-        className="px-3 py-2 text-sm font-medium text-gray-500 bg-white border border-gray-300 rounded-r-md hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+        className="px-3 py-2 text-sm font-medium text-gray-500 bg-white border border-gray-300 rounded-r-md hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-inset"
+        aria-label="Go to next page"
       >
         Next
       </button>
@@ -194,8 +238,16 @@ export const DataTable: React.FC = React.memo(() => {
 
   if (isLoading) {
     return (
-      <div className="flex items-center justify-center h-64">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+      <div
+        className="flex items-center justify-center h-64"
+        role="status"
+        aria-live="polite"
+      >
+        <div
+          className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"
+          aria-hidden="true"
+        ></div>
+        <span className="sr-only">Loading data...</span>
       </div>
     )
   }
@@ -203,7 +255,11 @@ export const DataTable: React.FC = React.memo(() => {
   return (
     <div className="bg-white shadow-sm rounded-lg border border-gray-200">
       <div className="overflow-x-auto">
-        <table className="min-w-full divide-y divide-gray-200">
+        <table
+          className="min-w-full divide-y divide-gray-200"
+          role="table"
+          aria-label="Data table"
+        >
           <thead className="bg-gray-50">
             <tr>
               <TableHeader
@@ -258,15 +314,19 @@ export const DataTable: React.FC = React.memo(() => {
           <div className="flex-1 flex justify-between sm:hidden">
             <button
               onClick={() => handlePageChange(currentPage - 1)}
+              onKeyDown={e => handleKeyDown(e, currentPage - 1)}
               disabled={currentPage === 1}
-              className="relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-inset"
+              aria-label="Go to previous page"
             >
               Previous
             </button>
             <button
               onClick={() => handlePageChange(currentPage + 1)}
+              onKeyDown={e => handleKeyDown(e, currentPage + 1)}
               disabled={currentPage === totalPages}
-              className="ml-3 relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="ml-3 relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-inset"
+              aria-label="Go to next page"
             >
               Next
             </button>
@@ -287,7 +347,11 @@ export const DataTable: React.FC = React.memo(() => {
               </p>
             </div>
             <div>
-              <nav className="relative z-0 inline-flex rounded-md shadow-sm -space-x-px">
+              <nav
+                className="relative z-0 inline-flex rounded-md shadow-sm -space-x-px"
+                role="navigation"
+                aria-label="Pagination"
+              >
                 {renderPagination()}
               </nav>
             </div>

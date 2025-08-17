@@ -12,16 +12,25 @@ export const PaginationControls: React.FC = React.memo(() => {
   )
 
   return (
-    <div className="bg-white p-4 rounded-lg shadow-sm border border-gray-200 mb-4">
+    <div
+      className="bg-white p-4 rounded-lg shadow-sm border border-gray-200 mb-4"
+      role="region"
+      aria-label="Pagination controls"
+    >
       <div className="flex items-center justify-between">
         <div className="flex items-center space-x-4">
-          <label className="text-sm font-medium text-gray-700">
+          <label
+            htmlFor="items-per-page"
+            className="text-sm font-medium text-gray-700"
+          >
             Items per page:
           </label>
           <select
+            id="items-per-page"
             value={itemsPerPage}
             onChange={handleItemsPerPageChange}
             className="px-3 py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            aria-label="Select number of items per page"
           >
             <option value={10}>10</option>
             <option value={20}>20</option>

@@ -131,6 +131,8 @@ export function FormContainer({
       role="form"
       onSubmit={handleSubmit}
       className={`max-w-2xl mx-auto p-8 bg-white rounded-lg shadow-lg ${className}`}
+      aria-label="Dynamic form"
+      noValidate
     >
       {children}
 
@@ -138,7 +140,10 @@ export function FormContainer({
         <button
           type="submit"
           disabled={state.isSubmitting}
-          className="flex-1 px-6 py-3 text-sm font-medium text-white bg-blue-500 border-none rounded-md cursor-pointer transition-colors duration-200 ease-in-out hover:bg-blue-600 disabled:bg-gray-400 disabled:cursor-not-allowed sm:w-full"
+          aria-describedby={
+            state.isSubmitting ? 'submitting-status' : undefined
+          }
+          className="flex-1 px-6 py-3 text-sm font-medium text-white bg-blue-500 border-none rounded-md cursor-pointer transition-colors duration-200 ease-in-out hover:bg-blue-600 disabled:bg-gray-400 disabled:cursor-not-allowed sm:w-full focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
         >
           {state.isSubmitting ? 'Submitting...' : 'Submit'}
         </button>
@@ -146,21 +151,43 @@ export function FormContainer({
         <button
           type="button"
           onClick={resetForm}
-          className="px-6 py-3 text-sm font-medium text-gray-700 bg-gray-100 border border-gray-300 rounded-md cursor-pointer transition-colors duration-200 ease-in-out hover:bg-gray-200 sm:w-full"
+          className="px-6 py-3 text-sm font-medium text-gray-700 bg-gray-100 border border-gray-300 rounded-md cursor-pointer transition-colors duration-200 ease-in-out hover:bg-gray-200 sm:w-full focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2"
         >
           Reset
         </button>
       </div>
 
-      {state.isSubmitting ? null : state.submitError ? (
-        <div className="mt-4 p-3 text-sm bg-red-50 text-red-700 border border-red-200 rounded-md">
+      {/* Status messages */}
+      {state.isSubmitting && (
+        <div
+          id="submitting-status"
+          className="mt-4 p-3 text-sm bg-blue-50 text-blue-700 border border-blue-200 rounded-md"
+          role="status"
+          aria-live="polite"
+        >
+          Submitting form...
+        </div>
+      )}
+
+      {!state.isSubmitting && state.submitError && (
+        <div
+          className="mt-4 p-3 text-sm bg-red-50 text-red-700 border border-red-200 rounded-md"
+          role="alert"
+          aria-live="assertive"
+        >
           {state.submitError}
         </div>
-      ) : showSubmitSuccessMessage ? (
-        <div className="mt-4 p-3 text-sm bg-green-50 text-green-700 border border-green-200 rounded-md">
+      )}
+
+      {showSubmitSuccessMessage && (
+        <div
+          className="mt-4 p-3 text-sm bg-green-50 text-green-700 border border-green-200 rounded-md"
+          role="status"
+          aria-live="polite"
+        >
           Form submitted successfully!
         </div>
-      ) : null}
+      )}
     </form>
   )
 }

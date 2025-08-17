@@ -1,11 +1,14 @@
-import { useState, type JSXElementConstructor } from 'react'
+import { useState, type JSXElementConstructor, useRef, useEffect } from 'react'
 import { cn } from './utils/cn'
 import FormDemo from './components/FormDemo'
 import { OptimizedDataGrid } from './components/optimized-data-grid'
 
 function HamburgerIcon({ isOpen }: { isOpen: boolean }) {
   return (
-    <div className="w-6 h-6 flex flex-col justify-center items-center">
+    <div
+      className="w-6 h-6 flex flex-col justify-center items-center"
+      aria-hidden="true"
+    >
       <span
         className={cn(
           'block w-5 h-0.5 bg-gray-600 dark:bg-gray-300 transition-all duration-300 origin-center',
@@ -29,7 +32,11 @@ function HamburgerIcon({ isOpen }: { isOpen: boolean }) {
 }
 
 function MainContainer({ children }: { children: React.ReactNode }) {
-  return <main className="h-screen w-full flex">{children}</main>
+  return (
+    <main className="h-screen w-full flex" role="main">
+      {children}
+    </main>
+  )
 }
 
 function HamburgerMenu({
@@ -39,14 +46,27 @@ function HamburgerMenu({
   isOpen: boolean
   onClick: () => void
 }) {
+  const buttonRef = useRef<HTMLButtonElement>(null)
+
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault()
+      onClick()
+    }
+  }
+
   return (
     <button
+      ref={buttonRef}
       onClick={onClick}
+      onKeyDown={handleKeyDown}
       className={cn(
         'lg:hidden fixed top-4 z-50 p-2 bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 transition-all duration-300',
         isOpen ? 'left-64' : 'left-4'
       )}
-      aria-label="Toggle menu"
+      aria-label={isOpen ? 'Close navigation menu' : 'Open navigation menu'}
+      aria-expanded={isOpen}
+      aria-controls="sidebar-navigation"
     >
       <HamburgerIcon isOpen={isOpen} />
     </button>
@@ -64,15 +84,27 @@ function Sidebar({
     <>
       {/* Mobile overlay */}
       {isOpen && (
-        <div className="lg:hidden fixed inset-0 bg-black bg-opacity-50 z-40" />
+        <div
+          className="lg:hidden fixed inset-0 bg-black bg-opacity-50 z-40"
+          aria-hidden="true"
+          onClick={() => {
+            // Close sidebar when overlay is clicked
+            const event = new CustomEvent('closeSidebar')
+            window.dispatchEvent(event)
+          }}
+        />
       )}
 
       {/* Sidebar */}
       <aside
+        id="sidebar-navigation"
         className={cn(
           'fixed lg:static inset-y-0 left-0 z-40 w-80 bg-white dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700 p-6 overflow-y-auto transform transition-transform duration-300 ease-in-out',
           isOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'
         )}
+        role="navigation"
+        aria-label="Main navigation"
+        aria-hidden={!isOpen}
       >
         {children}
       </aside>
@@ -82,7 +114,11 @@ function Sidebar({
 
 function Content({ children }: { children: React.ReactNode }) {
   return (
-    <div className="flex-1 p-6 lg:p-6 pt-20 lg:pt-6 overflow-y-auto bg-gray-50 dark:bg-gray-900">
+    <div
+      className="flex-1 p-6 lg:p-6 pt-20 lg:pt-6 overflow-y-auto bg-gray-50 dark:bg-gray-900"
+      role="region"
+      aria-label="Main content"
+    >
       {children}
     </div>
   )
@@ -105,6 +141,13 @@ function MainButton({
   onClick: () => void
   isSelected: boolean
 }) {
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault()
+      onClick()
+    }
+  }
+
   return (
     <button
       type="button"
@@ -115,6 +158,9 @@ function MainButton({
         'focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2'
       )}
       onClick={onClick}
+      onKeyDown={handleKeyDown}
+      aria-pressed={isSelected}
+      aria-current={isSelected ? 'page' : undefined}
     >
       <span
         className={cn(
@@ -176,7 +222,11 @@ function Components({
         Select a component:
       </h2>
 
-      <div className="space-y-2">
+      <div
+        className="space-y-2"
+        role="group"
+        aria-labelledby="component-selection"
+      >
         {availableComponents.map(componentName => (
           <MainButton
             key={componentName}
@@ -215,6 +265,27 @@ export default function App() {
   >(null)
   const [isSidebarOpen, setIsSidebarOpen] = useState(false)
   const closeSidebar = () => setIsSidebarOpen(false)
+
+  // Handle escape key to close sidebar
+  useEffect(() => {
+    const handleEscape = (e: KeyboardEvent) => {
+      if (e.key === 'Escape' && isSidebarOpen) {
+        setIsSidebarOpen(false)
+      }
+    }
+
+    const handleCloseSidebar = () => {
+      setIsSidebarOpen(false)
+    }
+
+    document.addEventListener('keydown', handleEscape)
+    window.addEventListener('closeSidebar', handleCloseSidebar)
+
+    return () => {
+      document.removeEventListener('keydown', handleEscape)
+      window.removeEventListener('closeSidebar', handleCloseSidebar)
+    }
+  }, [isSidebarOpen])
 
   return (
     <MainContainer>

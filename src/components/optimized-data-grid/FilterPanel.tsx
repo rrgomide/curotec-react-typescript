@@ -53,6 +53,16 @@ export const FilterPanel: React.FC = React.memo(() => {
     resetFilters()
   }, [resetFilters])
 
+  const handleKeyDown = useCallback(
+    (e: React.KeyboardEvent) => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault()
+        resetFilters()
+      }
+    },
+    [resetFilters]
+  )
+
   const hasActiveFilters = useMemo(() => {
     return (
       filterConfig.search ||
@@ -64,13 +74,19 @@ export const FilterPanel: React.FC = React.memo(() => {
   }, [filterConfig])
 
   return (
-    <div className="bg-white p-4 rounded-lg shadow-sm border border-gray-200 mb-4">
+    <div
+      className="bg-white p-4 rounded-lg shadow-sm border border-gray-200 mb-4"
+      role="region"
+      aria-label="Data filters"
+    >
       <div className="flex items-center justify-between mb-4">
         <h3 className="text-lg font-semibold text-gray-900">Filters</h3>
         {hasActiveFilters && (
           <button
             onClick={handleReset}
-            className="text-sm text-blue-600 hover:text-blue-800 font-medium"
+            onKeyDown={handleKeyDown}
+            className="text-sm text-blue-600 hover:text-blue-800 font-medium focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 rounded"
+            aria-label="Clear all filters"
           >
             Clear All
           </button>
@@ -80,27 +96,37 @@ export const FilterPanel: React.FC = React.memo(() => {
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-4">
         {/* Search */}
         <div className="lg:col-span-2">
-          <label className="block text-sm font-medium text-gray-700 mb-1">
+          <label
+            htmlFor="search-filter"
+            className="block text-sm font-medium text-gray-700 mb-1"
+          >
             Search
           </label>
           <input
+            id="search-filter"
             type="text"
             value={filterConfig.search}
             onChange={handleSearchChange}
             placeholder="Search by name, email, or department..."
             className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            aria-label="Search by name, email, or department"
           />
         </div>
 
         {/* Department */}
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
+          <label
+            htmlFor="department-filter"
+            className="block text-sm font-medium text-gray-700 mb-1"
+          >
             Department
           </label>
           <select
+            id="department-filter"
             value={filterConfig.department}
             onChange={handleDepartmentChange}
             className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            aria-label="Filter by department"
           >
             <option value="">All Departments</option>
             {departments.map(dept => (
@@ -113,13 +139,18 @@ export const FilterPanel: React.FC = React.memo(() => {
 
         {/* Status */}
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
+          <label
+            htmlFor="status-filter"
+            className="block text-sm font-medium text-gray-700 mb-1"
+          >
             Status
           </label>
           <select
+            id="status-filter"
             value={filterConfig.status}
             onChange={handleStatusChange}
             className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            aria-label="Filter by status"
           >
             <option value="">All Statuses</option>
             {statuses.map(status => (
@@ -132,25 +163,34 @@ export const FilterPanel: React.FC = React.memo(() => {
 
         {/* Min Salary */}
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
+          <label
+            htmlFor="min-salary-filter"
+            className="block text-sm font-medium text-gray-700 mb-1"
+          >
             Min Salary
           </label>
           <input
+            id="min-salary-filter"
             type="number"
             value={filterConfig.minSalary || ''}
             onChange={handleMinSalaryChange}
             placeholder="0"
             min="0"
             className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            aria-label="Minimum salary filter"
           />
         </div>
 
         {/* Max Salary */}
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
+          <label
+            htmlFor="max-salary-filter"
+            className="block text-sm font-medium text-gray-700 mb-1"
+          >
             Max Salary
           </label>
           <input
+            id="max-salary-filter"
             type="number"
             value={
               filterConfig.maxSalary === 200000 ? '' : filterConfig.maxSalary
@@ -159,6 +199,7 @@ export const FilterPanel: React.FC = React.memo(() => {
             placeholder="200000"
             min="0"
             className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            aria-label="Maximum salary filter"
           />
         </div>
       </div>
