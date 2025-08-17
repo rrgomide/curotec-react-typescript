@@ -88,7 +88,6 @@ function Sidebar({
           className="lg:hidden fixed inset-0 bg-black bg-opacity-50 z-40"
           aria-hidden="true"
           onClick={() => {
-            // Close sidebar when overlay is clicked
             const event = new CustomEvent('closeSidebar')
             window.dispatchEvent(event)
           }}
@@ -232,7 +231,7 @@ function Components({
             key={componentName}
             onClick={() => {
               onComponentSelect(componentName)
-              closeSidebar() // Close sidebar on mobile after selection
+              closeSidebar()
             }}
             isSelected={selectedComponent === componentName}
           >
@@ -266,7 +265,6 @@ export default function App() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false)
   const closeSidebar = () => setIsSidebarOpen(false)
 
-  // Handle escape key to close sidebar
   useEffect(() => {
     const handleEscape = (e: KeyboardEvent) => {
       if (e.key === 'Escape' && isSidebarOpen) {

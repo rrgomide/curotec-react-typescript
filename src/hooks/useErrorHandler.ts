@@ -10,7 +10,6 @@ export function useErrorHandler<TError extends Error = Error>(
 ) {
   const handleError = useCallback(
     (error: TError, errorInfo?: unknown) => {
-      // Log error in development
       if (import.meta.env.DEV) {
         console.error('Error caught by useErrorHandler:', error, errorInfo)
       }

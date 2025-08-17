@@ -24,26 +24,21 @@ class ErrorBoundary<TError extends Error = Error> extends Component<
   static getDerivedStateFromError<TError extends Error = Error>(
     error: TError
   ): State<TError> {
-    // Update state so the next render will show the fallback UI
     return { hasError: true, error }
   }
 
   componentDidCatch(error: TError, errorInfo: ErrorInfo) {
-    // Log the error to console in development
     if (import.meta.env.DEV) {
       console.error('ErrorBoundary caught an error:', error, errorInfo)
     }
 
-    // Call the onError callback if provided
     this.props.onError?.(error, errorInfo)
 
-    // Update state with error info
     this.setState({ error, errorInfo })
   }
 
   render() {
     if (this.state.hasError) {
-      // Custom fallback UI
       if (this.props.fallback) {
         if (
           typeof this.props.fallback === 'function' &&
@@ -57,7 +52,6 @@ class ErrorBoundary<TError extends Error = Error> extends Component<
         }
       }
 
-      // Default fallback UI
       return (
         <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-900">
           <div className="max-w-md w-full bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6 mx-4">
