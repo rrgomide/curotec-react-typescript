@@ -1,6 +1,7 @@
 import { useState, type JSXElementConstructor } from 'react'
 import { cn } from './utils/cn'
 import FormDemo from './components/FormDemo'
+import { OptimizedDataGrid } from './components/optimized-data-grid'
 
 function HamburgerIcon({ isOpen }: { isOpen: boolean }) {
   return (
@@ -146,20 +147,6 @@ function DynamicFormComponent() {
   return (
     <ComponentContainer>
       <FormDemo />
-    </ComponentContainer>
-  )
-}
-
-function OptimizedDataGrid() {
-  return (
-    <ComponentContainer>
-      <h2 className="text-xl font-semibold text-gray-800 dark:text-white mb-4">
-        Optimized Data Grid
-      </h2>
-      <p className="text-gray-600 dark:text-gray-300">
-        This component will feature an optimized data grid with sorting,
-        filtering, and pagination.
-      </p>
     </ComponentContainer>
   )
 }
