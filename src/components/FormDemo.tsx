@@ -70,14 +70,20 @@ const departmentOptions = [
   { value: 'operations', label: 'Operations' },
 ].sort((a, b) => a.label.localeCompare(b.label))
 
+function simulateDelay({ milliseconds }: { milliseconds: number }) {
+  return new Promise(resolve => setTimeout(resolve, milliseconds))
+}
+
 function FormDemo() {
-  const handleSubmit = async (values: Record<string, string | boolean>) => {
-    await new Promise(resolve => setTimeout(resolve, 1_500))
+  async function handleFormDemoSubmit(
+    values: Record<string, string | boolean>
+  ) {
+    await simulateDelay({ milliseconds: 1_500 })
     console.log('Form submitted with values:', JSON.stringify(values, null, 2))
 
-    // Simulate success/failure
+    // ~50% chance of error/success
     if (Math.random() > 0.5) {
-      throw new Error('Network error occurred. Please try again.')
+      throw new Error('Could not submit form. Please try again.')
     }
   }
 
@@ -103,7 +109,7 @@ function FormDemo() {
           </p>
 
           <DynamicForm
-            onSubmit={handleSubmit}
+            onSubmit={handleFormDemoSubmit}
             initialValues={initialValues}
             validationSchema={validationSchema}
             className="bg-transparent shadow-none p-0"

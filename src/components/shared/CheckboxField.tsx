@@ -26,8 +26,8 @@ export function CheckboxField({ name, label, required }: BaseFieldProps) {
           {required && <span className="text-red-500 ml-1">*</span>}
         </span>
       </label>
-      {field.error && field.touched && (
-        <div className="mt-1 text-xs text-red-500">{field.error}</div>
+      {field.error && (
+        <div className="mt-1 ml-2 text-xs text-red-500">{field.error}</div>
       )}
     </div>
   )

@@ -18,7 +18,6 @@ export const useFormContext = () => {
   return context
 }
 
-// Custom Hook for Field Logic
 export const useFormField = (
   name: string,
   initialValue: string | boolean = ''

@@ -15,7 +15,6 @@ export function TextField({
     const value = e.target.value
     handleChange(value)
 
-    // Validate on change if field is touched
     if (field.touched) {
       const error = validateField(name, value)
       if (error) {
@@ -46,7 +45,7 @@ export function TextField({
             : 'border-gray-300 focus:border-blue-500'
         }`}
       />
-      {field.error && field.touched && (
+      {field.error && (
         <div className="mt-1 text-xs text-red-500">{field.error}</div>
       )}
     </div>

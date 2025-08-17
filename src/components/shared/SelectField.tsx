@@ -42,7 +42,7 @@ export function SelectField({
           </option>
         ))}
       </select>
-      {field.error && field.touched && (
+      {field.error && (
         <div className="mt-1 text-xs text-red-500">{field.error}</div>
       )}
     </div>

@@ -1,4 +1,18 @@
-import { type FormState, type FormAction } from './types'
+import { type FormState, type FormAction, type FormField } from './types'
+
+function resetAllFields(fields: Record<string, FormField>) {
+  return Object.keys(fields).reduce((acc, key) => {
+    return {
+      ...acc,
+      [key]: {
+        ...fields[key],
+        touched: false,
+        value: '',
+        error: undefined,
+      },
+    }
+  }, {})
+}
 
 // Form Reducer
 export const formReducer = (
@@ -58,7 +72,7 @@ export const formReducer = (
 
     case 'RESET_FORM':
       return {
-        fields: {},
+        fields: resetAllFields(state.fields),
         isSubmitting: false,
         isSubmitted: false,
         submitError: undefined,

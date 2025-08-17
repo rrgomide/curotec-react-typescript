@@ -69,6 +69,7 @@ export function FormProvider({
         values[name] = field.value
 
         const error = validateField(name, field.value)
+
         if (error) {
           setFieldError(name, error)
           hasErrors = true
@@ -116,7 +117,6 @@ export function FormContainer({
   className = '',
 }: FormContainerProps) {
   const { state, submitForm, resetForm } = useFormContext()
-  console.log('🔥 ~ state:', { state })
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
@@ -128,6 +128,7 @@ export function FormContainer({
 
   return (
     <form
+      role="form"
       onSubmit={handleSubmit}
       className={`max-w-2xl mx-auto p-8 bg-white rounded-lg shadow-lg ${className}`}
     >
@@ -141,6 +142,7 @@ export function FormContainer({
         >
           {state.isSubmitting ? 'Submitting...' : 'Submit'}
         </button>
+
         <button
           type="button"
           onClick={resetForm}
