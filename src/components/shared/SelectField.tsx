@@ -2,12 +2,12 @@ import React from 'react'
 import type { SelectFieldProps } from '../DynamicForm/types'
 import { useFormField } from '../DynamicForm/hooks'
 
-export const SelectField: React.FC<SelectFieldProps> = ({
+export function SelectField({
   name,
   label,
   options,
   required,
-}) => {
+}: SelectFieldProps) {
   const { field, handleChange, handleBlur } = useFormField(name, '')
 
   const handleSelectChange = (e: React.ChangeEvent<HTMLSelectElement>) => {

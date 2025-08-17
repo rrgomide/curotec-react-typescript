@@ -2,11 +2,7 @@ import React from 'react'
 import type { BaseFieldProps } from '../DynamicForm/types'
 import { useFormField } from '../DynamicForm/hooks'
 
-export const CheckboxField: React.FC<BaseFieldProps> = ({
-  name,
-  label,
-  required,
-}) => {
+export function CheckboxField({ name, label, required }: BaseFieldProps) {
   const { field, handleChange, handleBlur } = useFormField(name, false)
 
   const handleCheckboxChange = (e: React.ChangeEvent<HTMLInputElement>) => {

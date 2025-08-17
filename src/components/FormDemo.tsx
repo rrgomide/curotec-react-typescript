@@ -1,46 +1,84 @@
-import React from 'react'
-import {
-  DynamicForm,
-  TextField,
-  SelectField,
-  CheckboxField,
-} from './DynamicForm'
-import { validators } from './DynamicForm/validators'
+import { DynamicForm } from './DynamicForm'
+import { CheckboxField, SelectField, TextField } from './shared'
 
-const FormDemo: React.FC = () => {
+const validators = {
+  required: (value: string | boolean): string | undefined => {
+    if (typeof value === 'string' && !value.trim()) {
+      return 'This field is required'
+    }
+    if (typeof value === 'boolean' && !value) {
+      return 'This field is required'
+    }
+    return undefined
+  },
+
+  email: (value: string): string | undefined => {
+    if (value && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) {
+      return 'Please enter a valid email address'
+    }
+    return undefined
+  },
+
+  minLength:
+    (min: number) =>
+    (value: string): string | undefined => {
+      if (value && value.length < min) {
+        return `Must be at least ${min} characters`
+      }
+      return undefined
+    },
+}
+
+const validationSchema = {
+  name: (value: string | boolean) => {
+    if (typeof value !== 'string') {
+      return 'Name must be a string'
+    }
+    const required = validators.required(value)
+    if (required) {
+      return required
+    }
+    return validators.minLength(2)(value)
+  },
+  email: (value: string | boolean) => {
+    if (typeof value !== 'string') {
+      return 'Email must be a string'
+    }
+    const required = validators.required(value)
+    if (required) {
+      return required
+    }
+    return validators.email(value)
+  },
+  department: validators.required,
+  terms: validators.required,
+}
+
+const initialValues = {
+  name: '',
+  email: '',
+  department: '',
+  terms: false,
+}
+
+const departmentOptions = [
+  { value: 'engineering', label: 'Engineering' },
+  { value: 'marketing', label: 'Marketing' },
+  { value: 'sales', label: 'Sales' },
+  { value: 'hr', label: 'Human Resources' },
+  { value: 'finance', label: 'Finance' },
+  { value: 'operations', label: 'Operations' },
+].sort((a, b) => a.label.localeCompare(b.label))
+
+function FormDemo() {
   const handleSubmit = async (values: Record<string, string | boolean>) => {
-    // Simulate API call
-    await new Promise(resolve => setTimeout(resolve, 1500))
-    console.log('Form submitted with values:', values)
+    await new Promise(resolve => setTimeout(resolve, 1_500))
+    console.log('Form submitted with values:', JSON.stringify(values, null, 2))
 
     // Simulate success/failure
     if (Math.random() > 0.5) {
       throw new Error('Network error occurred. Please try again.')
     }
-  }
-
-  const validationSchema = {
-    name: (value: string | boolean) => {
-      if (typeof value !== 'string') return 'Name must be a string'
-      const required = validators.required(value)
-      if (required) return required
-      return validators.minLength(2)(value)
-    },
-    email: (value: string | boolean) => {
-      if (typeof value !== 'string') return 'Email must be a string'
-      const required = validators.required(value)
-      if (required) return required
-      return validators.email(value)
-    },
-    department: validators.required,
-    terms: validators.required,
-  }
-
-  const initialValues = {
-    name: '',
-    email: '',
-    department: '',
-    terms: false,
   }
 
   return (
@@ -87,14 +125,7 @@ const FormDemo: React.FC = () => {
             <SelectField
               name="department"
               label="Department"
-              options={[
-                { value: 'engineering', label: 'Engineering' },
-                { value: 'marketing', label: 'Marketing' },
-                { value: 'sales', label: 'Sales' },
-                { value: 'hr', label: 'Human Resources' },
-                { value: 'finance', label: 'Finance' },
-                { value: 'operations', label: 'Operations' },
-              ]}
+              options={departmentOptions}
               required
             />
 

@@ -45,7 +45,10 @@ export const formReducer = (
       }
 
     case 'SET_SUBMITTING':
-      return { ...state, isSubmitting: action.payload }
+      return {
+        ...state,
+        isSubmitting: action.payload,
+      }
 
     case 'SET_SUBMITTED':
       return { ...state, isSubmitted: action.payload }

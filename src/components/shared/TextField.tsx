@@ -2,12 +2,12 @@ import React from 'react'
 import type { BaseFieldProps } from '../DynamicForm/types'
 import { useFormField, useFormContext } from '../DynamicForm/hooks'
 
-export const TextField: React.FC<BaseFieldProps> = ({
+export function TextField({
   name,
   label,
   placeholder,
   required,
-}) => {
+}: BaseFieldProps) {
   const { field, handleChange, handleBlur } = useFormField(name, '')
   const { validateField, setFieldError } = useFormContext()
 
